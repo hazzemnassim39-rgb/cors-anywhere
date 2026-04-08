@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>BOT BAN NASSIM | أقوى نظام حظر فري فاير</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            min-height: 100vh;
+            color: #fff;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* تأثير النار */
+        .flame-effect {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .flame {
+            position: absolute;
+            bottom: -50px;
+            background: linear-gradient(0deg, #ff4500, #ff8c00, #ffd700);
+            border-radius: 50%;
+            opacity: 0;
+            animation: rise 4s infinite ease-in;
+        }
+
+        @keyframes rise {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(-100vh) scale(0);
+                opacity: 0;
+            }
+        }
+
+        /* الهيدر */
+        .header {
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(15px);
+            padding: 20px;
+            text-align: center;
+            border-bottom: 2px solid #ff4500;
+            position: relative;
+            z-index: 10;
+        }
+
+        .logo {
+            font-size: 2.5em;
+            font-weight: 900;
+            background: linear-gradient(45deg, #ff4500, #ff8c00, #ffd700);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 30px rgba(255, 69, 0, 0.5);
+        }
+
+        .subtitle {
+            color: #ff8c00;
+            margin-top: 5px;
+        }
+
+        /* الحاوية الرئيسية */
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* كارد التبنيد */
+        .ban-card {
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
+            padding: 30px;
+            border: 1px solid rgba(255, 69, 0, 0.5);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            margin-top: 30px;
+        }
+
+        .card-title {
+            text-align: center;
+            font-size: 1.8em;
+            margin-bottom: 25px;
+            color: #ff8c00;
+        }
+
+        .card-title i {
+            margin: 0 10px;
+        }
+
+        /* حقل الإدخال */
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #ff8c00;
+        }
+
+        .token-input {
+            width: 100%;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 69, 0, 0.3);
+            border-radius: 15px;
+            color: #fff;
+            font-family: monospace;
+            font-size: 14px;
+            direction: ltr;
+            text-align: left;
+            transition: all 0.3s;
+        }
+
+        .token-input:focus {
+            outline: none;
+            border-color: #ff4500;
+            box-shadow: 0 0 20px rgba(255, 69, 0, 0.3);
+        }
+
+        .token-input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        /* زر التبنيد */
+        .ban-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #ff4500, #ff8c00);
+            border: none;
+            border-radius: 15px;
+            color: white;
+            font-size: 1.3em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Cairo', sans-serif;
+            margin-top: 10px;
+        }
+
+        .ban-btn:hover:not(:disabled) {
+            transform: scale(1.02);
+            box-shadow: 0 10px 30px rgba(255, 69, 0, 0.4);
+        }
+
+        .ban-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* رسالة الحالة */
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 15px;
+            text-align: center;
+            font-weight: bold;
+            display: none;
+        }
+
+        .status.success {
+            background: rgba(0, 255, 0, 0.2);
+            border: 1px solid #00ff00;
+            color: #00ff00;
+            display: block;
+        }
+
+        .status.error {
+            background: rgba(255, 0, 0, 0.2);
+            border: 1px solid #ff0000;
+            color: #ff6666;
+            display: block;
+        }
+
+        .status.loading {
+            background: rgba(255, 165, 0, 0.2);
+            border: 1px solid #ffa500;
+            color: #ffa500;
+            display: block;
+        }
+
+        /* إحصائيات */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .stat-item {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 15px;
+            border-radius: 20px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #ff8c00;
+        }
+
+        .stat-label {
+            font-size: 0.8em;
+            margin-top: 5px;
+            opacity: 0.8;
+        }
+
+        /* معلومات إضافية */
+        .info-card {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 20px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+
+        .info-item i {
+            width: 35px;
+            color: #ff8c00;
+            font-size: 1.2em;
+        }
+
+        /* الفوتر */
+        .footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+            border-top: 1px solid rgba(255, 69, 0, 0.3);
+            font-size: 0.9em;
+        }
+
+        .developer {
+            color: #ff8c00;
+            font-weight: bold;
+        }
+
+        /* أنيميشن */
+        @keyframes glow {
+            0%, 100% { text-shadow: 0 0 5px #ff4500; }
+            50% { text-shadow: 0 0 20px #ff4500, 0 0 30px #ff8c00; }
+        }
+
+        .glow {
+            animation: glow 2s infinite;
+        }
+
+        /* متجاوب */
+        @media (max-width: 500px) {
+            .container {
+                padding: 15px;
+            }
+            .ban-card {
+                padding: 20px;
+            }
+            .logo {
+                font-size: 1.8em;
+            }
+            .stats {
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="flame-effect" id="flameEffect"></div>
+
+<div class="header">
+    <h1 class="logo">🔥 BOT BAN NASSIM 🔥</h1>
+    <p class="subtitle">أقوى نظام حظر لحسابات فري فاير</p>
+    <p style="font-size: 12px; margin-top: 5px;">صنع بواسطة <span class="developer">Nassim</span></p>
+</div>
+
+<div class="container">
+    <div class="ban-card">
+        <div class="card-title">
+            <i class="fas fa-skull"></i>
+            حظر الحساب
+            <i class="fas fa-skull"></i>
+        </div>
+
+        <div class="input-group">
+            <label><i class="fas fa-key"></i> توكن الوصول (Access Token)</label>
+            <input type="text" id="tokenInput" class="token-input" placeholder="أدخل التوكن هنا..." autocomplete="off">
+        </div>
+
+        <button class="ban-btn" id="banBtn" onclick="banAccount()">
+            <i class="fas fa-bolt"></i> حظر الآن <i class="fas fa-fire"></i>
+        </button>
+
+        <div id="status" class="status"></div>
+    </div>
+
+    <div class="stats">
+        <div class="stat-item">
+            <div class="stat-number" id="totalBans">0</div>
+            <div class="stat-label">إجمالي الحظر</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number" id="todayBans">0</div>
+            <div class="stat-label">حظر اليوم</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number" id="successRate">100%</div>
+            <div class="stat-label">نسبة النجاح</div>
+        </div>
+    </div>
+
+    <div class="info-card">
+        <div class="info-item">
+            <i class="fas fa-check-circle"></i>
+            <span>✔️ نظام حظر فوري ومضمون</span>
+        </div>
+        <div class="info-item">
+            <i class="fas fa-shield-alt"></i>
+            <span>✔️ حماية كاملة لهويتك</span>
+        </div>
+        <div class="info-item">
+            <i class="fas fa-rocket"></i>
+            <span>✔️ سرعة فائقة في التنفيذ</span>
+        </div>
+        <div class="info-item">
+            <i class="fas fa-globe"></i>
+            <span>✔️ يدعم جميع خوادم اللعبة</span>
+        </div>
+        <div class="info-item">
+            <i class="fas fa-code-branch"></i>
+            <span>✔️ تحديثات مستمرة ودعم فني</span>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>© 2026 جميع الحقوق محفوظة | <span class="developer">Nassim</span></p>
+        <p style="font-size: 11px; margin-top: 5px;">الإصدار الأسطوري 3.0 | للأغراض التعليمية فقط</p>
+    </div>
+</div>
+
+<script>
+    // تأثير النار
+    function createFlames() {
+        const container = document.getElementById('flameEffect');
+        setInterval(() => {
+            const flame = document.createElement('div');
+            flame.className = 'flame';
+            const size = Math.random() * 30 + 10;
+            flame.style.width = size + 'px';
+            flame.style.height = size + 'px';
+            flame.style.left = Math.random() * 100 + '%';
+            flame.style.animationDuration = Math.random() * 3 + 2 + 's';
+            flame.style.animationDelay = Math.random() * 2 + 's';
+            container.appendChild(flame);
+            setTimeout(() => flame.remove(), 4000);
+        }, 200);
+    }
+
+    // تحميل الإحصائيات
+    function loadStats() {
+        fetch('/api/stats')
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('totalBans').innerText = data.total_bans || 0;
+                document.getElementById('todayBans').innerText = data.today_bans || 0;
+                document.getElementById('successRate').innerText = (data.success_rate || 100) + '%';
+            })
+            .catch(err => console.log('خطأ في تحميل الإحصائيات'));
+    }
+
+    // عرض رسالة الحالة
+    function showStatus(message, type) {
+        const statusDiv = document.getElementById('status');
+        statusDiv.className = 'status ' + type;
+        statusDiv.innerHTML = type === 'loading' ? 
+            '<i class="fas fa-spinner fa-spin"></i> ' + message : 
+            '<i class="fas fa-' + (type === 'success' ? 'check-circle' : 'exclamation-triangle') + '"></i> ' + message;
+        
+        if (type !== 'loading') {
+            setTimeout(() => {
+                statusDiv.style.display = 'none';
+                statusDiv.className = 'status';
+            }, 5000);
+        }
+    }
+
+    // دالة حظر الحساب
+    async function banAccount() {
+        const token = document.getElementById('tokenInput').value.trim();
+        const banBtn = document.getElementById('banBtn');
+        
+        if (!token) {
+            showStatus('⚠️ الرجاء إدخال التوكن أولاً!', 'error');
+            return;
+        }
+        
+        if (token.length < 30) {
+            showStatus('⚠️ التوكن غير صالح! تأكد من إدخال التوكن الصحيح', 'error');
+            return;
+        }
+        
+        banBtn.disabled = true;
+        banBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري التبنيد...';
+        showStatus('جاري معالجة الطلب وحظر الحساب...', 'loading');
+        
+        try {
+            const response = await fetch('/api/ban', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ access_token: token })
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                showStatus('✅ ' + result.message, 'success');
+                document.getElementById('tokenInput').value = '';
+                loadStats(); // تحديث الإحصائيات
+            } else {
+                showStatus('❌ ' + result.message, 'error');
+            }
+        } catch (error) {
+            console.error('خطأ:', error);
+            showStatus('❌ حدث خطأ في الاتصال بالخادم! تأكد من تشغيل السيرفر', 'error');
+        } finally {
+            banBtn.disabled = false;
+            banBtn.innerHTML = '<i class="fas fa-bolt"></i> حظر الآن <i class="fas fa-fire"></i>';
+        }
+    }
+
+    // الضغط على Enter
+    document.getElementById('tokenInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') banAccount();
+    });
+
+    // بدء التشغيل
+    createFlames();
+    loadStats();
+    setInterval(loadStats, 30000); // تحديث كل 30 ثانية
+</script>
+</body>
+</html>
