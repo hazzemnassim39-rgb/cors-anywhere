@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة المشرف - NASSIM Hosting</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="admin-dashboard">
+        <!-- الشريط العلوي -->
+        <header class="header admin-header">
+            <div class="header-left">
+                <h1>👑 NASSIM <span>ADMIN</span></h1>
+            </div>
+            <div class="header-center">
+                <div class="admin-badge">لوحة التحكم الرئيسية</div>
+            </div>
+            <div class="header-right">
+                <span class="admin-name">{{ admin_name }}</span>
+                <a href="{{ url_for('logout') }}" class="logout-btn">خروج</a>
+            </div>
+        </header>
+        
+        <main class="admin-content">
+            <!-- إحصائيات سريعة -->
+            <div class="admin-stats">
+                <div class="stat-card">
+                    <span class="stat-value">{{ stats.total_users }}</span>
+                    <span class="stat-label">مستخدم</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value">{{ stats.total_bots }}</span>
+                    <span class="stat-label">بوت</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value">{{ stats.active_bots }}</span>
+                    <span class="stat-label">نشط</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value">{{ stats.unused_codes }}</span>
+                    <span class="stat-label">كود متاح</span>
+                </div>
+            </div>
+            
+            <!-- إنشاء كود جديد -->
+            <div class="admin-section">
+                <h2>🎫 إنشاء كود تفعيل جديد</h2>
+                <form id="createCodeForm" class="create-code-form">
+                    <div class="form-row">
+                        <input type="text" name="username" placeholder="اسم المستخدم" required>
+                        <input type="number" name="days" placeholder="المدة (يوم)" value="30" min="1" max="3650">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="is_admin"> مشرف
+                        </label>
+                        <button type="submit" class="btn-primary">إنشاء الكود</button>
+                    </div>
+                </form>
+                
+                <div id="newCodeDisplay" class="code-display hidden">
+                    <span>الكود الجديد:</span>
+                    <code id="generatedCode"></code>
+                    <button onclick="copyCode()">نسخ</button>
+                </div>
+            </div>
+            
+            <!-- علامات تبويب -->
+            <div class="admin-tabs">
+                <button class="tab-btn active" onclick="showTab('users')">👥 المستخدمين</button>
+                <button class="tab-btn" onclick="showTab('codes')">🎫 الأكواد</button>
+                <button class="tab-btn" onclick="showTab('bots')">🤖 البوتات</button>
+            </div>
+            
+            <!-- جدول المستخدمين -->
+            <div id="usersTab" class="tab-content active">
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>المعرف</th>
+                                <th>المستخدم</th>
+                                <th>تاريخ الإنشاء</th>
+                                <th>تاريخ الانتهاء</th>
+                                <th>النوع</th>
+                                <th>الحالة</th>
+                                <th>إجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in users %}
+                            <tr>
+                                <td>{{ user.id }}</td>
+                                <td>{{ user.username }}</td>
+                                <td>{{ user.created_at[:10] }}</td>
+                                <td>{{ user.expires_at[:10] }}</td>
+                                <td>
+                                    <span class="badge {{ 'admin' if user.is_admin else 'user' }}">
+                                        {{ 'مشرف' if user.is_admin else 'مستخدم' }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="badge {{ 'active' if user.is_active else 'expired' }}">
+                                        {{ 'نشط' if user.is_active else 'منتهي' }}
+                                    </span>
+                                </td>
+                                <td class="actions">
+                                    {% if not user.is_admin %}
+                                    <button onclick="extendUser({{ user.id }})" class="btn-small">📅 تمديد</button>
+                                    <button onclick="deleteUser({{ user.id }})" class="btn-small btn-danger">🗑️ حذف</button>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- جدول الأكواد -->
+            <div id="codesTab" class="tab-content">
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>الكود</th>
+                                <th>المستخدم</th>
+                                <th>المدة</th>
+                                <th>مشرف</th>
+                                <th>تاريخ الإنشاء</th>
+                                <th>الحالة</th>
+                                <th>إجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for code in codes %}
+                            <tr>
+                                <td><code>{{ code.code }}</code></td>
+                                <td>{{ code.username }}</td>
+                                <td>{{ code.days }} يوم</td>
+                                <td>{{ 'نعم' if code.is_admin else 'لا' }}</td>
+                                <td>{{ code.created_at[:10] }}</td>
+                                <td>
+                                    <span class="badge {{ 'available' if not code.used_by else 'used' }}">
+                                        {{ 'متاح' if not code.used_by else 'مستخدم' }}
+                                    </span>
+                                </td>
+                                <td class="actions">
+                                    {% if not code.used_by %}
+                                    <button onclick="deleteCode('{{ code.code }}')" class="btn-small btn-danger">🗑️ حذف</button>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- جدول البوتات -->
+            <div id="botsTab" class="tab-content">
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>المعرف</th>
+                                <th>المالك</th>
+                                <th>اسم البوت</th>
+                                <th>يوزر البوت</th>
+                                <th>الحالة</th>
+                                <th>تاريخ الرفع</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for bot in bots %}
+                            <tr>
+                                <td>{{ bot.id[:8] }}</td>
+                                <td>{{ bot.owner_name }}</td>
+                                <td>{{ bot.bot_name }}</td>
+                                <td>{{ bot.bot_username or '-' }}</td>
+                                <td>
+                                    <span class="badge {{ bot.status }}">
+                                        {{ 'نشط' if bot.status == 'running' else 'متوقف' }}
+                                    </span>
+                                </td>
+                                <td>{{ bot.created_at[:10] }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="{{ url_for('static', filename='admin.js') }}"></script>
+</body>
+</html>

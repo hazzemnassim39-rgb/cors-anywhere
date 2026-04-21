@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم - NASSIM Hosting</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.socket.io/4.5.0/socket.io.min.js"></script>
+</head>
+<body>
+    <div class="dashboard">
+        <!-- الشريط العلوي -->
+        <header class="header">
+            <div class="header-left">
+                <h1>⚡ NASSIM <span>HOSTING</span></h1>
+            </div>
+            <div class="header-center">
+                <div class="time-display" id="timeDisplay">
+                    <span>00:00:00</span>
+                    <small>الوقت المتبقي</small>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="user-info">
+                    <span class="username">{{ username }}</span>
+                    <span class="user-badge">مستخدم</span>
+                </div>
+                <a href="{{ url_for('logout') }}" class="logout-btn">خروج</a>
+            </div>
+        </header>
+        
+        <!-- المحتوى الرئيسي -->
+        <main class="main-content">
+            <!-- الإحصائيات -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">🤖</div>
+                    <div class="stat-info">
+                        <span class="stat-number" id="activeBots">0</span>
+                        <span class="stat-label">بوت نشط</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📦</div>
+                    <div class="stat-info">
+                        <span class="stat-number" id="totalBots">{{ bots|length }}</span>
+                        <span class="stat-label">إجمالي البوتات</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⏰</div>
+                    <div class="stat-info">
+                        <span class="stat-number" id="daysLeft">-</span>
+                        <span class="stat-label">يوم متبقي</span>
+                    </div>
+                </div>
+                <div class="stat-card status-card">
+                    <div class="stat-icon">🟢</div>
+                    <div class="stat-info">
+                        <span class="stat-number">نشط</span>
+                        <span class="stat-label">حالة النظام</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- منطقة رفع البوت -->
+            <div class="upload-section">
+                <h2>📤 رفع بوت جديد</h2>
+                <form id="uploadForm" enctype="multipart/form-data">
+                    <div class="upload-area" id="dropZone">
+                        <input type="file" name="file" id="fileInput" accept=".py" hidden>
+                        <div class="upload-content">
+                            <span class="upload-icon">☁️</span>
+                            <p>اسحب وأفلت ملف البايثون هنا</p>
+                            <p class="upload-hint">أو اضغط للاختيار</p>
+                            <span class="file-name" id="fileName"></span>
+                        </div>
+                    </div>
+                    <div class="upload-actions">
+                        <input type="text" name="bot_name" placeholder="اسم البوت (اختياري)" class="bot-name-input">
+                        <button type="submit" class="btn-primary" id="uploadBtn">
+                            <span>رفع وتشغيل</span> 🚀
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- قائمة البوتات -->
+            <div class="bots-section">
+                <h2>🤖 بوتاتي</h2>
+                
+                {% if bots %}
+                <div class="bots-grid" id="botsGrid">
+                    {% for bot in bots %}
+                    <div class="bot-card" data-bot-id="{{ bot.id }}" data-status="{{ bot.status }}">
+                        <div class="bot-header">
+                            <span class="bot-name">{{ bot.bot_name }}</span>
+                            <span class="bot-status {{ bot.status }}">
+                                {{ 'نشط' if bot.status == 'running' else 'متوقف' }}
+                            </span>
+                        </div>
+                        <div class="bot-body">
+                            {% if bot.bot_username %}
+                            <div class="bot-username">{{ bot.bot_username }}</div>
+                            {% endif %}
+                            <div class="bot-file">{{ bot.original_name }}</div>
+                            <div class="bot-time">منذ {{ bot.created_at[:10] }}</div>
+                        </div>
+                        <div class="bot-actions">
+                            {% if bot.status == 'running' %}
+                            <button class="btn-stop" onclick="stopBot('{{ bot.id }}')">
+                                ⏸️ إيقاف
+                            </button>
+                            {% else %}
+                            <button class="btn-start" onclick="startBot('{{ bot.id }}')">
+                                ▶️ تشغيل
+                            </button>
+                            {% endif %}
+                            <button class="btn-delete" onclick="deleteBot('{{ bot.id }}')">
+                                🗑️ حذف
+                            </button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="empty-state">
+                    <span>📭</span>
+                    <p>لا توجد بوتات مرفوعة</p>
+                </div>
+                {% endif %}
+            </div>
+        </main>
+    </div>
+    
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
