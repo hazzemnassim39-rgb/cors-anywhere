@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>تسجيل الدخول - استضافة NASSIM</title>
+    <title>NASSIM HOST - تسجيل الدخول</title>
     
     <!-- الخطوط -->
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Tajawal:wght@300;400;500;700&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Tajawal:wght@300;400;500;700;800&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-        /* الأساسيات */
         * {
             margin: 0;
             padding: 0;
@@ -20,726 +19,493 @@
         
         body {
             font-family: 'Tajawal', 'Rajdhani', sans-serif;
-            background: linear-gradient(135deg, #0a1f2a 0%, #071a1a 100%);
-            color: #fff;
+            background: #03050b;
+            color: #eef2ff;
             direction: rtl;
             min-height: 100vh;
-            overflow-x: hidden;
-            -webkit-overflow-scrolling: touch;
-            touch-action: manipulation;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
             position: relative;
         }
 
-        /* الجسيمات المتحركة */
-        #particles {
+        /* خلفية متحركة (مدمجة من التصميمين) */
+        .bg-aurora {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            pointer-events: none;
+            inset: 0;
+            background: radial-gradient(ellipse at 20% 30%, rgba(45,122,255,0.18), transparent 65%),
+                        radial-gradient(ellipse at 85% 70%, rgba(0,229,255,0.12), transparent 60%),
+                        radial-gradient(ellipse at 60% 90%, rgba(0,200,255,0.1), transparent 55%);
+            z-index: -2;
+            animation: auroraShift 12s ease-in-out infinite alternate;
+        }
+        @keyframes auroraShift {
+            from { opacity: 0.8; }
+            to { opacity: 1; filter: hue-rotate(20deg); }
         }
         
+        .particles {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            overflow: hidden;
+        }
         .particle {
             position: absolute;
-            bottom: -100px;
-            background: rgba(0, 200, 255, 0.15);
+            width: 2px;
+            height: 2px;
+            background: rgba(0, 200, 255, 0.5);
             border-radius: 50%;
-            pointer-events: none;
-            animation: floatParticle linear infinite;
-            box-shadow: 0 0 15px rgba(0, 200, 255, 0.3);
+            animation: float linear infinite;
+            box-shadow: 0 0 8px rgba(0, 200, 255, 0.4);
         }
-        
-        @keyframes floatParticle {
-            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
-            10% { opacity: 0.8; }
+        @keyframes float {
+            0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+            10% { opacity: 1; }
             90% { opacity: 0.5; }
-            100% { transform: translateY(-120vh) rotate(720deg); opacity: 0; }
+            100% { transform: translateY(-10vh) translateX(40px); opacity: 0; }
         }
 
-        /* شريط التنقل الذكي */
-        .navbar {
-            background: rgba(10, 25, 30, 0.95);
-            border-bottom: 2px solid #00ccff;
-            padding: 12px 30px;
+        /* حاوية تسجيل الدخول */
+        .login-wrap {
+            width: 100%;
+            max-width: 440px;
+            padding: 20px;
+            animation: fadeInUp 0.6s ease;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .login-card {
+            background: rgba(10, 14, 30, 0.85);
+            backdrop-filter: blur(24px);
+            border: 1px solid rgba(45, 122, 255, 0.3);
+            border-radius: 32px;
+            padding: 40px 36px;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(45,122,255,0.1) inset;
+        }
+
+        /* الشعار */
+        .brand {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        .brand-icon {
+            width: 72px;
+            height: 72px;
+            background: linear-gradient(145deg, #0f172a, #0d1526);
+            border: 1.5px solid rgba(0, 229, 255, 0.5);
+            border-radius: 22px;
             display: flex;
+            align-items: center;
             justify-content: center;
-            align-items: center;
-            box-shadow: 0 5px 25px rgba(0, 200, 255, 0.15);
-            backdrop-filter: blur(15px);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            border-radius: 0 0 15px 15px;
+            font-size: 2rem;
+            color: #00e5ff;
+            margin: 0 auto 16px;
+            box-shadow: 0 0 24px rgba(0, 229, 255, 0.25), 0 0 60px rgba(45, 122, 255, 0.15);
         }
-        
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        
-        .logo-icon {
-            width: 45px;
-            height: 45px;
-            background: linear-gradient(135deg, #00ccff 0%, #0099ff 100%);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 0 20px rgba(0, 200, 255, 0.5);
-        }
-        
-        .logo-icon i {
-            font-size: 22px;
-            color: #fff;
-        }
-        
-        .logo-text {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 22px;
-            font-weight: 900;
-            background: linear-gradient(90deg, #00ccff, #00aaff);
+        .brand-name {
+            font-size: 1.8rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, #2d7aff, #00e5ff);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            text-shadow: 0 0 10px rgba(0, 200, 255, 0.3);
-        }
-
-        /* الحاوية الرئيسية */
-        .login-container {
-            width: 92%;
-            max-width: 480px;
-            margin: 50px auto 30px;
-            background: rgba(10, 25, 30, 0.85);
-            padding: 30px;
-            border-radius: 20px;
-            border: 2px solid rgba(0, 200, 255, 0.3);
-            box-shadow: 0 10px 30px rgba(0, 200, 255, 0.1);
-            backdrop-filter: blur(10px);
-            position: relative;
-            overflow: hidden;
-            transition: all 0.3s ease;
-        }
-        
-        .login-container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, #00ccff, #0099ff);
-            border-radius: 20px 20px 0 0;
-        }
-        
-        .login-container:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0, 200, 255, 0.2);
-        }
-
-        /* عنوان البطاقة */
-        .card-header {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid rgba(0, 200, 255, 0.2);
-        }
-        
-        .card-icon {
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, #00ccff 0%, #0099ff 100%);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 22px;
-            color: #fff;
-            box-shadow: 0 5px 15px rgba(0, 200, 255, 0.3);
-        }
-        
-        .card-title {
-            font-size: 20px;
-            font-weight: 700;
-            color: #b0e0ff;
             font-family: 'Orbitron', sans-serif;
         }
-        
-        .card-subtitle {
-            font-size: 14px;
-            color: #90d0ff;
-            margin-top: 5px;
+        .brand-sub {
+            font-size: 0.8rem;
+            color: #6b7aaa;
+            margin-top: 6px;
+        }
+
+        /* رسالة ترحيب */
+        .info-box {
+            background: rgba(0, 229, 255, 0.07);
+            border: 1px solid rgba(0, 229, 255, 0.2);
+            border-radius: 14px;
+            padding: 12px 16px;
+            margin-bottom: 24px;
+            font-size: 0.8rem;
+            color: #9ca3cf;
+            text-align: center;
         }
 
         /* حقول الإدخال */
-        .input-group {
+        .form-group {
             margin-bottom: 20px;
         }
-        
-        .input-group label {
+        .form-label {
             display: block;
-            margin-bottom: 10px;
+            font-size: 0.85rem;
             color: #b0e0ff;
+            margin-bottom: 8px;
             font-weight: 600;
-            font-size: 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
         }
-        
-        .input-wrapper {
+        .input-icon-wrap {
             position: relative;
         }
-        
-        .input-wrapper input {
+        .form-input {
             width: 100%;
-            padding: 16px 20px;
-            padding-right: 50px;
-            border: 2px solid rgba(0, 200, 255, 0.2);
-            border-radius: 12px;
-            background: rgba(15, 30, 35, 0.7);
-            color: #fff;
-            font-size: 16px;
+            padding: 14px 18px;
+            padding-right: 46px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(0, 200, 255, 0.25);
+            border-radius: 14px;
+            color: #eef2ff;
             font-family: 'Tajawal', sans-serif;
-            transition: all 0.3s;
-            -webkit-appearance: none;
-        }
-        
-        .input-wrapper input:focus {
-            border-color: #00ccff;
-            box-shadow: 0 0 0 3px rgba(0, 200, 255, 0.2);
+            font-size: 0.95rem;
             outline: none;
-            background: rgba(15, 30, 35, 0.9);
+            transition: all 0.2s;
         }
-        
+        .form-input:focus {
+            border-color: #00ccff;
+            background: rgba(0, 200, 255, 0.07);
+            box-shadow: 0 0 0 3px rgba(0, 200, 255, 0.12);
+        }
+        .form-input::placeholder {
+            color: #4b556b;
+        }
         .input-icon {
             position: absolute;
-            left: 20px;
+            right: 16px;
             top: 50%;
             transform: translateY(-50%);
             color: #00ccff;
-            font-size: 18px;
+            font-size: 1rem;
         }
 
         /* الكابتشا */
-        .captcha-group {
-            background: rgba(15, 30, 35, 0.7);
-            border: 2px solid rgba(0, 200, 255, 0.2);
-            border-radius: 12px;
-            padding: 20px;
+        .captcha-box {
+            background: rgba(15, 30, 35, 0.4);
+            border: 1px solid rgba(0, 200, 255, 0.2);
+            border-radius: 14px;
+            padding: 16px;
             margin-bottom: 20px;
             text-align: center;
-            position: relative;
-            overflow: hidden;
         }
-        
-        .captcha-group::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, #00ccff, #0099ff);
-        }
-        
         .captcha-question {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 20px;
+            font-size: 1.2rem;
+            font-weight: 600;
             color: #00ccff;
-            margin-bottom: 15px;
-            text-shadow: 0 0 5px rgba(0, 200, 255, 0.5);
+            margin-bottom: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 8px;
         }
 
-        /* الأزرار */
-        .btn {
+        /* زر الدخول */
+        .submit-btn {
             width: 100%;
-            padding: 16px;
+            padding: 15px;
+            background: linear-gradient(135deg, #00ccff, #0099ff);
             border: none;
-            border-radius: 12px;
-            font-size: 18px;
+            border-radius: 14px;
+            color: white;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 1rem;
             font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s;
-            font-family: 'Tajawal', sans-serif;
+            transition: all 0.25s;
+            box-shadow: 0 6px 20px rgba(0, 200, 255, 0.4);
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
-            position: relative;
-            overflow: hidden;
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            user-select: none;
+            margin-top: 8px;
         }
-        
-        .btn-primary {
-            background: linear-gradient(135deg, #00ccff 0%, #0099ff 100%);
-            color: white;
-            box-shadow: 0 5px 15px rgba(0, 200, 255, 0.3);
-        }
-        
-        .btn-primary:hover {
-            background: linear-gradient(135deg, #0099ff 0%, #00ccff 100%);
-            box-shadow: 0 8px 25px rgba(0, 200, 255, 0.4);
+        .submit-btn:hover {
             transform: translateY(-2px);
+            box-shadow: 0 10px 28px rgba(0, 200, 255, 0.55);
         }
-        
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: 0.5s;
-        }
-        
-        .btn:hover::before {
-            left: 100%;
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
         }
 
         /* التنبيهات */
         .alert {
-            padding: 15px;
-            border-radius: 10px;
-            margin: 10px 0;
-            display: flex;
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-size: 0.85rem;
+            margin-bottom: 20px;
+            display: none;
             align-items: center;
             gap: 10px;
-            animation: slideIn 0.3s ease;
-            backdrop-filter: blur(5px);
         }
-        
-        .alert-error {
-            background: rgba(255, 65, 108, 0.15);
-            border: 1px solid #ff416c;
-            color: #ffb5b5;
+        .alert.error {
+            background: rgba(255, 61, 90, 0.1);
+            border: 1px solid rgba(255, 61, 90, 0.3);
+            color: #ff7a94;
         }
-        
-        .alert-success {
-            background: rgba(0, 255, 157, 0.15);
-            border: 1px solid #00ff9d;
-            color: #b0ffd0;
+        .alert.success {
+            background: rgba(0, 255, 136, 0.08);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            color: #00ff88;
         }
-        
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(-10px); }
+        .alert.show {
+            display: flex;
+            animation: alertIn 0.3s ease;
+        }
+        @keyframes alertIn {
+            from { opacity: 0; transform: translateY(-8px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* بطاقة معلومات الاستضافة */
-        .hosting-info-card {
-            max-width: 500px;
-            margin: 30px auto;
-            background: rgba(10, 25, 30, 0.85);
-            border: 2px solid rgba(0, 200, 255, 0.3);
-            border-radius: 20px;
-            padding: 25px;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 200, 255, 0.1);
-            backdrop-filter: blur(10px);
-        }
-        
-        .hosting-info-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, #00ccff, #0099ff);
-            border-radius: 20px 20px 0 0;
-        }
-        
-        .hosting-header {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid rgba(0, 200, 255, 0.2);
-        }
-        
-        .hosting-icon {
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, #00ccff 0%, #0099ff 100%);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 22px;
-            color: #071a1a;
-            box-shadow: 0 5px 15px rgba(0, 200, 255, 0.3);
-        }
-        
-        .hosting-title {
-            font-size: 20px;
-            font-weight: 700;
-            color: #00ccff;
-            font-family: 'Orbitron', sans-serif;
-        }
-        
-        .hosting-subtitle {
-            font-size: 14px;
-            color: #00aaff;
-            margin-top: 5px;
-        }
-        
-        .feature-list {
-            padding: 10px;
-        }
-        
-        .feature-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 12px;
-            padding: 12px;
-            background: rgba(0, 200, 255, 0.1);
-            border-radius: 8px;
-            border-right: 4px solid #00ccff;
-            transition: all 0.3s;
-        }
-        
-        .feature-item:hover {
-            background: rgba(0, 200, 255, 0.15);
-            transform: translateX(-5px);
-        }
-        
-        .feature-check {
-            margin-left: 12px;
-            color: #00ccff;
-            font-size: 18px;
-        }
-        
-        .feature-name {
-            flex-grow: 1;
-            color: #00ccff;
-            font-weight: bold;
-            font-size: 16px;
-            font-family: 'Orbitron', sans-serif;
-        }
-        
-        .contact-info {
-            text-align: center;
-            margin-top: 20px;
-            padding-top: 15px;
-            border-top: 2px solid #00ccff;
-            color: #00ccff;
-            font-size: 16px;
-            font-weight: bold;
-        }
-        
-        .telegram-link {
-            display: inline-block;
-            margin-top: 10px;
-            padding: 10px 20px;
-            background: rgba(0, 200, 255, 0.15);
-            border-radius: 30px;
-            color: #00ccff;
-            text-decoration: none;
-            border: 1px solid #00ccff;
-            transition: all 0.3s;
-        }
-        
-        .telegram-link:hover {
-            background: #00ccff;
-            color: #071a1a;
-        }
-
-        /* التذييل */
-        .footer {
-            text-align: center;
-            margin-top: 40px;
-            padding: 25px;
-            color: #90d0ff;
-            font-size: 14px;
-            border-top: 1px solid rgba(0, 200, 255, 0.2);
-            background: rgba(10, 20, 25, 0.8);
-            backdrop-filter: blur(5px);
-        }
-
-        /* تحسينات للجوال */
-        @media (max-width: 768px) {
-            .navbar {
-                padding: 15px;
-            }
-            
-            .login-container, .hosting-info-card {
-                padding: 25px;
-                margin-top: 40px;
-                width: 95%;
-            }
-            
-            .logo-text {
-                font-size: 20px;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .input-wrapper input {
-                padding: 14px 20px;
-                padding-right: 45px;
-                font-size: 15px;
-            }
-            
-            .btn {
-                padding: 14px;
-                font-size: 16px;
-            }
-            
-            .captcha-question {
-                font-size: 18px;
-            }
-            
-            .card-header {
-                flex-direction: column;
-                text-align: center;
-                gap: 10px;
-            }
-            
-            .card-icon {
-                width: 45px;
-                height: 45px;
-                font-size: 20px;
-            }
-        }
-
-        /* شريط التمرير المخصص */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        
-        ::-webkit-scrollbar-track {
-            background: rgba(10, 20, 25, 0.5);
-            border-radius: 4px;
-        }
-        
-        ::-webkit-scrollbar-thumb {
-            background: linear-gradient(180deg, #00ccff, #0099ff);
-            border-radius: 4px;
-        }
-        
-        ::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(180deg, #0099ff, #00ccff);
-        }
-        
-        /* تحسينات iOS */
-        input, textarea, select {
-            font-size: 16px !important;
-        }
-        
-        /* تأثير التحميل */
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
+        /* سبينر */
+        .spinner-sm {
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: white;
             border-radius: 50%;
-            border-top-color: #00ccff;
-            animation: spin 1s ease-in-out infinite;
+            animation: spin 0.7s linear infinite;
+            display: none;
         }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* تذييل */
+        .footer-note {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 0.75rem;
+            color: #6b7aaa;
+        }
+        .footer-note a {
+            color: #2d7aff;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .tg-link {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 8px 20px;
+            background: rgba(0, 136, 204, 0.12);
+            border: 1px solid rgba(0, 136, 204, 0.3);
+            border-radius: 30px;
+            color: #29b5e8;
+            font-size: 0.8rem;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+        .tg-link:hover {
+            background: rgba(0, 136, 204, 0.2);
+            border-color: #29b5e8;
+        }
+
+        /* تحسينات الجوال */
+        @media (max-width: 480px) {
+            .login-card {
+                padding: 30px 20px;
+            }
+            .brand-name {
+                font-size: 1.5rem;
+            }
         }
     </style>
 </head>
-
 <body>
-    <!-- خلفية الجسيمات -->
-    <div id="particles"></div>
+<div class="bg-aurora"></div>
+<div class="particles" id="particles"></div>
 
-    <!-- شريط التنقل -->
-    <nav class="navbar">
-        <div class="logo">
-            <div class="logo-icon">
-                <i class="fas fa-cloud-upload-alt"></i>
-            </div>
-            <div>
-                <div class="logo-text">NASSIM HOST</div>
-                <div style="font-size: 11px; color: #90d0ff;">لوحة تحكم الاستضافة</div>
-            </div>
-        </div>
-    </nav>
-
-    <!-- حاوية تسجيل الدخول -->
-    <div class="login-container">
-        <div class="card-header">
-            <div class="card-icon">
-                <i class="fas fa-server"></i>
-            </div>
-            <div>
-                <div class="card-title">تسجيل الدخول إلى الاستضافة</div>
-                <div class="card-subtitle">أدخل بيانات حساب الاستضافة الخاص بك</div>
-            </div>
+<div class="login-wrap">
+    <div class="login-card">
+        <div class="brand">
+            <div class="brand-icon"><i class="fas fa-crown"></i></div>
+            <div class="brand-name">NASSIM HOST</div>
+            <div class="brand-sub">لوحة التحكم الآمنة</div>
         </div>
 
-        <!-- نموذج تسجيل الدخول -->
-        <form method="POST" id="loginForm" onsubmit="event.preventDefault(); alert('هذا نموذج تجريبي - سيتم ربطه بنظام الاستضافة الخاص بك.');">
-            <div class="input-group">
-                <label for="username">
-                    <i class="fas fa-user"></i>
-                    اسم المستخدم
-                </label>
-                <div class="input-wrapper">
-                    <input type="text" 
-                           id="username" 
-                           name="username" 
-                           placeholder="أدخل اسم المستخدم"
-                           required
-                           autocomplete="username">
-                    <div class="input-icon">
-                        <i class="fas fa-user"></i>
-                    </div>
+        <div class="alert" id="alertBox">
+            <i class="fas fa-exclamation-circle"></i>
+            <span id="alertMsg"></span>
+        </div>
+
+        <div class="info-box">
+            <i class="fas fa-shield-alt"></i> قم بتسجيل الدخول للوصول إلى لوحة التحكم
+        </div>
+
+        <form id="loginForm" onsubmit="return false;">
+            <div class="form-group">
+                <label class="form-label"><i class="fas fa-user"></i> اسم المستخدم</label>
+                <div class="input-icon-wrap">
+                    <input type="text" class="form-input" id="username" placeholder="أدخل اسم المستخدم" autocomplete="username" required>
+                    <i class="fas fa-user input-icon"></i>
                 </div>
             </div>
 
-            <div class="input-group">
-                <label for="password">
-                    <i class="fas fa-lock"></i>
-                    كلمة المرور
-                </label>
-                <div class="input-wrapper">
-                    <input type="password" 
-                           id="password" 
-                           name="password" 
-                           placeholder="أدخل كلمة المرور"
-                           required
-                           autocomplete="current-password">
-                    <div class="input-icon">
-                        <i class="fas fa-key"></i>
-                    </div>
+            <div class="form-group">
+                <label class="form-label"><i class="fas fa-lock"></i> كلمة المرور</label>
+                <div class="input-icon-wrap">
+                    <input type="password" class="form-input" id="password" placeholder="أدخل كلمة المرور" autocomplete="current-password" required>
+                    <i class="fas fa-lock input-icon"></i>
                 </div>
             </div>
 
-            <!-- نظام الكابتشا -->
-            <div class="captcha-group">
+            <!-- كابتشا بسيطة -->
+            <div class="captcha-box">
                 <div class="captcha-question">
                     <i class="fas fa-shield-alt"></i>
                     <span id="captchaQuestion">7 + 4 = ?</span>
                 </div>
-                <div class="input-wrapper">
-                    <input type="text" 
-                           id="captcha" 
-                           name="captcha" 
-                           placeholder="أدخل ناتج الكابتشا"
-                           required>
-                    <div class="input-icon">
-                        <i class="fas fa-calculator"></i>
-                    </div>
+                <div class="input-icon-wrap">
+                    <input type="text" class="form-input" id="captchaInput" placeholder="أدخل الناتج" required>
+                    <i class="fas fa-calculator input-icon"></i>
                 </div>
+                <input type="hidden" id="captchaResult">
             </div>
-            
-            <button type="submit" class="btn btn-primary" id="loginBtn">
-                <i class="fas fa-sign-in-alt"></i>
-                دخول لوحة الاستضافة
+
+            <button type="submit" class="submit-btn" id="loginBtn">
+                <span id="btnText"><i class="fas fa-sign-in-alt"></i> تسجيل الدخول</span>
+                <div class="spinner-sm" id="btnSpinner"></div>
             </button>
         </form>
-    </div>
 
-    <!-- بطاقة معلومات الاستضافة والتواصل -->
-    <div class="hosting-info-card">
-        <div class="hosting-header">
-            <div class="hosting-icon">
-                <i class="fas fa-hdd"></i>
-            </div>
-            <div>
-                <div class="hosting-title">استضافة NASSIM</div>
-                <div class="hosting-subtitle">حلول استضافة متكاملة وآمنة</div>
-            </div>
-        </div>
-        
-        <div class="feature-list">
-            <div class="feature-item">
-                <div class="feature-check"><i class="fas fa-check-circle"></i></div>
-                <div class="feature-name">مساحة تخزين SSD غير محدودة</div>
-            </div>
-            <div class="feature-item">
-                <div class="feature-check"><i class="fas fa-check-circle"></i></div>
-                <div class="feature-name">نقل بيانات شهري غير محدود</div>
-            </div>
-            <div class="feature-item">
-                <div class="feature-check"><i class="fas fa-check-circle"></i></div>
-                <div class="feature-name">حماية DDoS متقدمة</div>
-            </div>
-            <div class="feature-item">
-                <div class="feature-check"><i class="fas fa-check-circle"></i></div>
-                <div class="feature-name">دعم فني على مدار الساعة</div>
-            </div>
-        </div>
-        
-        <div class="contact-info">
-            <i class="fab fa-telegram" style="margin-left: 8px;"></i>
-            للدعم الفني تواصل عبر تيليجرام
+        <div class="footer-note">
+            <i class="fas fa-headset"></i> للدعم الفني تواصل عبر
             <br>
-            <a href="https://t.me/NASSIM_D5X" class="telegram-link" target="_blank">
-                <i class="fab fa-telegram"></i> @NASSIM_D5X
+            <a href="https://t.me/NASSIM_D5X" target="_blank" class="tg-link">
+                <i class="fab fa-telegram-plane"></i> @NASSIM_D5X
             </a>
+            <div style="margin-top: 16px;">🛡️ NASSIM HOST v3.0</div>
         </div>
     </div>
+</div>
 
-    <!-- التذييل -->
-    <div class="footer">
-        <i class="fas fa-code" style="margin-left: 8px;"></i>
-        نظام استضافة NASSIM | جميع الحقوق محفوظة © 2026
-        <br>
-        <span style="font-size: 12px; opacity: 0.8;">
-            إصدار 2.0 | تصميم خاص للاستضافة السحابية
-        </span>
-    </div>
-
-    <!-- JavaScript Code -->
-    <script>
-        // توليد الجسيمات المتحركة
-        const particlesContainer = document.getElementById("particles");
-        for (let i = 0; i < 35; i++) {
-            let p = document.createElement("div");
-            let size = Math.random() * 10 + 5;
-            p.classList.add("particle");
-            p.style.width = size + "px";
-            p.style.height = size + "px";
-            p.style.left = Math.random() * 100 + "vw";
-            p.style.animationDuration = (12 + Math.random() * 12) + "s";
-            p.style.animationDelay = Math.random() * 10 + "s";
-            p.style.background = `rgba(${Math.random() * 50 + 100}, ${Math.random() * 100 + 155}, 255, 0.2)`;
-            particlesContainer.appendChild(p);
+<script>
+    (function() {
+        // توليد الجسيمات
+        const container = document.getElementById('particles');
+        for (let i = 0; i < 30; i++) {
+            const p = document.createElement('div');
+            p.className = 'particle';
+            p.style.left = Math.random() * 100 + '%';
+            p.style.animationDuration = (6 + Math.random() * 12) + 's';
+            p.style.animationDelay = (Math.random() * 10) + 's';
+            p.style.width = p.style.height = (1 + Math.random() * 2.5) + 'px';
+            p.style.opacity = 0.3 + Math.random() * 0.7;
+            container.appendChild(p);
         }
-        
-        // تحسين تجربة المستخدم على الآيفون
-        function optimizeForIOS() {
-            document.querySelectorAll('input').forEach(input => {
-                input.addEventListener('focus', function() {
-                    setTimeout(() => {
-                        this.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    }, 300);
-                });
-            });
+
+        // إعدادات الكابتشا
+        let captchaAnswer = 0;
+        function generateCaptcha() {
+            const num1 = Math.floor(Math.random() * 10) + 1;
+            const num2 = Math.floor(Math.random() * 10) + 1;
+            captchaAnswer = num1 + num2;
+            document.getElementById('captchaQuestion').innerHTML = `<i class="fas fa-shield-alt"></i> ${num1} + ${num2} = ?`;
+            document.getElementById('captchaResult').value = captchaAnswer;
+        }
+
+        const alertBox = document.getElementById('alertBox');
+        const alertMsg = document.getElementById('alertMsg');
+        const loginBtn = document.getElementById('loginBtn');
+        const btnText = document.getElementById('btnText');
+        const btnSpinner = document.getElementById('btnSpinner');
+
+        function showAlert(msg, type = 'error') {
+            alertBox.className = `alert ${type} show`;
+            alertMsg.textContent = msg;
+            const icon = alertBox.querySelector('i');
+            icon.className = `fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}`;
+        }
+        function hideAlert() {
+            alertBox.className = 'alert';
+        }
+
+        function setLoading(isLoading) {
+            loginBtn.disabled = isLoading;
+            btnText.style.display = isLoading ? 'none' : 'inline';
+            btnSpinner.style.display = isLoading ? 'inline-block' : 'none';
+        }
+
+        // محاكاة API (استبدلها بالاتصال الحقيقي)
+        async function fakeApiLogin(username, password) {
+            await new Promise(resolve => setTimeout(resolve, 800));
+            // بيانات الدخول الافتراضية
+            if (username === 'NASSIM' && password === 'D5X2024') {
+                return { success: true, redirect: '/dashboard' };
+            } else {
+                return { success: false, message: 'اسم المستخدم أو كلمة المرور غير صحيحة' };
+            }
+        }
+
+        async function handleLogin() {
+            hideAlert();
             
-            document.querySelectorAll('input, textarea, select').forEach(el => {
-                el.addEventListener('touchstart', function() {
-                    this.style.fontSize = '16px';
-                });
-            });
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const captchaInput = document.getElementById('captchaInput').value.trim();
+            const correctCaptcha = parseInt(document.getElementById('captchaResult').value);
+
+            if (!username || !password) {
+                showAlert('⚠️ الرجاء إدخال اسم المستخدم وكلمة المرور');
+                return;
+            }
+            if (!captchaInput) {
+                showAlert('⚠️ الرجاء إدخال ناتج الكابتشا');
+                return;
+            }
+            if (parseInt(captchaInput) !== correctCaptcha) {
+                showAlert('❌ ناتج الكابتشا غير صحيح');
+                generateCaptcha();
+                document.getElementById('captchaInput').value = '';
+                return;
+            }
+
+            setLoading(true);
+            try {
+                // استبدل هذا بـ fetch('/api/login', { method:'POST', body: JSON.stringify({username, password}) })
+                const response = await fakeApiLogin(username, password);
+                
+                if (response.success) {
+                    showAlert('✅ تم تسجيل الدخول بنجاح! جاري التحويل...', 'success');
+                    setTimeout(() => {
+                        window.location.href = response.redirect || '/dashboard';
+                    }, 1000);
+                } else {
+                    showAlert(response.message || '❌ فشل تسجيل الدخول', 'error');
+                    generateCaptcha();
+                    document.getElementById('captchaInput').value = '';
+                }
+            } catch (error) {
+                showAlert('⚠️ خطأ في الاتصال بالخادم', 'error');
+                generateCaptcha();
+            } finally {
+                setLoading(false);
+            }
         }
-        
-        // تهيئة الصفحة
-        document.addEventListener('DOMContentLoaded', () => {
-            if (/iPhone|iPad|iPod/.test(navigator.userAgent)) {
-                optimizeForIOS();
+
+        // ربط الأحداث
+        document.getElementById('loginBtn').addEventListener('click', handleLogin);
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            handleLogin();
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !loginBtn.disabled) {
+                handleLogin();
             }
         });
-    </script>
+
+        // بدء الكابتشا
+        generateCaptcha();
+
+        // التحقق من الجلسة الحالية
+        fetch('/api/current_user')
+            .then(r => r.json())
+            .then(d => {
+                if (d.success) window.location.href = d.is_admin ? '/admin' : '/dashboard';
+            })
+            .catch(() => {});
+    })();
+</script>
 </body>
-</html>
+    </html>
