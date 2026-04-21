@@ -2,262 +2,47 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NASSIM HOST - تسجيل الدخول</title>
-    
-    <!-- الخطوط -->
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Tajawal:wght@300;400;500;700;800&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-        
-        body {
-            font-family: 'Tajawal', 'Rajdhani', sans-serif;
-            background: #03050b;
-            color: #eef2ff;
-            direction: rtl;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            position: relative;
-        }
-
-        /* خلفية متحركة */
-        .bg-aurora {
-            position: fixed;
-            inset: 0;
-            background: radial-gradient(ellipse at 20% 30%, rgba(45,122,255,0.18), transparent 65%),
-                        radial-gradient(ellipse at 85% 70%, rgba(0,229,255,0.12), transparent 60%),
-                        radial-gradient(ellipse at 60% 90%, rgba(0,200,255,0.1), transparent 55%);
-            z-index: -2;
-            animation: auroraShift 12s ease-in-out infinite alternate;
-        }
-        @keyframes auroraShift {
-            from { opacity: 0.8; }
-            to { opacity: 1; filter: hue-rotate(20deg); }
-        }
-        
-        .particles {
-            position: fixed;
-            inset: 0;
-            z-index: -1;
-            overflow: hidden;
-        }
-        .particle {
-            position: absolute;
-            width: 2px;
-            height: 2px;
-            background: rgba(0, 200, 255, 0.5);
-            border-radius: 50%;
-            animation: float linear infinite;
-            box-shadow: 0 0 8px rgba(0, 200, 255, 0.4);
-        }
-        @keyframes float {
-            0% { transform: translateY(100vh) translateX(0); opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 0.5; }
-            100% { transform: translateY(-10vh) translateX(40px); opacity: 0; }
-        }
-
-        /* حاوية تسجيل الدخول */
-        .login-wrap {
-            width: 100%;
-            max-width: 440px;
-            padding: 20px;
-            z-index: 10;
-        }
-
-        .login-card {
-            background: rgba(10, 14, 30, 0.85);
-            backdrop-filter: blur(24px);
-            border: 1px solid rgba(45, 122, 255, 0.3);
-            border-radius: 32px;
-            padding: 40px 36px;
-            box-shadow: 0 30px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(45,122,255,0.1) inset;
-        }
-
-        /* الشعار */
-        .brand {
-            text-align: center;
-            margin-bottom: 32px;
-        }
-        .brand-icon {
-            width: 72px;
-            height: 72px;
-            background: linear-gradient(145deg, #0f172a, #0d1526);
-            border: 1.5px solid rgba(0, 229, 255, 0.5);
-            border-radius: 22px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            color: #00e5ff;
-            margin: 0 auto 16px;
-            box-shadow: 0 0 24px rgba(0, 229, 255, 0.25), 0 0 60px rgba(45, 122, 255, 0.15);
-        }
-        .brand-name {
-            font-size: 1.8rem;
-            font-weight: 800;
-            letter-spacing: 2px;
-            background: linear-gradient(135deg, #2d7aff, #00e5ff);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            font-family: 'Orbitron', sans-serif;
-        }
-        .brand-sub {
-            font-size: 0.8rem;
-            color: #6b7aaa;
-            margin-top: 6px;
-        }
-
-        /* رسالة ترحيب */
-        .info-box {
-            background: rgba(0, 229, 255, 0.07);
-            border: 1px solid rgba(0, 229, 255, 0.2);
-            border-radius: 14px;
-            padding: 12px 16px;
-            margin-bottom: 24px;
-            font-size: 0.8rem;
-            color: #9ca3cf;
-            text-align: center;
-        }
-
-        /* حقول الإدخال */
-        .form-group {
-            margin-bottom: 20px;
-        }
-        .form-label {
-            display: block;
-            font-size: 0.85rem;
-            color: #b0e0ff;
-            margin-bottom: 8px;
-            font-weight: 600;
-        }
-        .input-icon-wrap {
-            position: relative;
-        }
-        .form-input {
-            width: 100%;
-            padding: 14px 18px;
-            padding-right: 46px;
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(0, 200, 255, 0.25);
-            border-radius: 14px;
-            color: #eef2ff;
-            font-family: 'Tajawal', sans-serif;
-            font-size: 0.95rem;
-            outline: none;
-            transition: all 0.2s;
-        }
-        .form-input:focus {
-            border-color: #00ccff;
-            background: rgba(0, 200, 255, 0.07);
-            box-shadow: 0 0 0 3px rgba(0, 200, 255, 0.12);
-        }
-        .form-input::placeholder {
-            color: #4b556b;
-        }
-        .input-icon {
-            position: absolute;
-            right: 16px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #00ccff;
-            font-size: 1rem;
-        }
-
-        /* الكابتشا */
-        .captcha-box {
-            background: rgba(15, 30, 35, 0.4);
-            border: 1px solid rgba(0, 200, 255, 0.2);
-            border-radius: 14px;
-            padding: 16px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        .captcha-question {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: #00ccff;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        /* زر الدخول */
-        .submit-btn {
-            width: 100%;
-            padding: 15px;
-            background: linear-gradient(135deg, #00ccff, #0099ff);
-            border: none;
-            border-radius: 14px;
-            color: white;
-            font-family: 'Tajawal', sans-serif;
-            font-size: 1rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.25s;
-            box-shadow: 0 6px 20px rgba(0, 200, 255, 0.4);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 8px;
-        }
-        .submit-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 28px rgba(0, 200, 255, 0.55);
-        }
-
-        /* تذييل */
-        .footer-note {
-            text-align: center;
-            margin-top: 24px;
-            font-size: 0.75rem;
-            color: #6b7aaa;
-        }
-        .footer-note a {
-            color: #2d7aff;
-            text-decoration: none;
-            font-weight: 600;
-        }
-        .tg-link {
-            display: inline-block;
-            margin-top: 12px;
-            padding: 8px 20px;
-            background: rgba(0, 136, 204, 0.12);
-            border: 1px solid rgba(0, 136, 204, 0.3);
-            border-radius: 30px;
-            color: #29b5e8;
-            font-size: 0.8rem;
-            text-decoration: none;
-            transition: 0.2s;
-        }
-        .tg-link:hover {
-            background: rgba(0, 136, 204, 0.2);
-            border-color: #29b5e8;
-        }
-
-        /* تحسينات الجوال */
-        @media (max-width: 480px) {
-            .login-card {
-                padding: 30px 20px;
-            }
-            .brand-name {
-                font-size: 1.5rem;
-            }
-        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family: 'Tajawal', sans-serif; background: #03050b; color: #eef2ff; min-height: 100vh; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .bg-aurora { position: fixed; inset: 0; background: radial-gradient(ellipse at 20% 30%, rgba(45,122,255,0.18), transparent 65%), radial-gradient(ellipse at 85% 70%, rgba(0,229,255,0.12), transparent 60%), radial-gradient(ellipse at 60% 90%, rgba(120,40,255,0.1), transparent 55%); z-index: -1; animation: auroraShift 12s ease-in-out infinite alternate; }
+        @keyframes auroraShift { from { opacity:0.8; } to { opacity:1; filter: hue-rotate(20deg); } }
+        .particles { position: fixed; inset: 0; z-index: -1; overflow: hidden; }
+        .particle { position: absolute; width: 2px; height: 2px; background: rgba(45,122,255,0.6); border-radius: 50%; animation: float linear infinite; }
+        @keyframes float { 0% { transform: translateY(100vh) translateX(0); opacity:0; } 10% { opacity:1; } 90% { opacity:0.5; } 100% { transform: translateY(-10vh) translateX(40px); opacity:0; } }
+        .login-wrap { width: 100%; max-width: 440px; padding: 20px; animation: fadeInUp 0.6s ease; }
+        @keyframes fadeInUp { from { opacity:0; transform:translateY(30px); } to { opacity:1; transform:translateY(0); } }
+        .login-card { background: rgba(10,14,30,0.85); backdrop-filter: blur(24px); border: 1px solid rgba(45,122,255,0.3); border-radius: 32px; padding: 40px 36px; box-shadow: 0 30px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(45,122,255,0.1) inset; }
+        .brand { text-align: center; margin-bottom: 32px; }
+        .brand-icon { width: 72px; height: 72px; background: linear-gradient(145deg, #0f172a, #0d1526); border: 1.5px solid rgba(0,229,255,0.5); border-radius: 22px; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: #00e5ff; margin: 0 auto 16px; box-shadow: 0 0 24px rgba(0,229,255,0.25), 0 0 60px rgba(45,122,255,0.15); }
+        .brand-name { font-size: 1.5rem; font-weight: 800; letter-spacing: 3px; background: linear-gradient(135deg, #2d7aff, #00e5ff); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .brand-sub { font-size: 0.8rem; color: #6b7aaa; margin-top: 6px; }
+        .form-group { margin-bottom: 18px; }
+        .form-label { display: block; font-size: 0.8rem; color: #9ca3cf; margin-bottom: 8px; font-weight: 600; }
+        .form-input { width: 100%; padding: 13px 18px; background: rgba(255,255,255,0.04); border: 1px solid rgba(45,122,255,0.25); border-radius: 14px; color: #eef2ff; font-family: 'Tajawal', sans-serif; font-size: 0.95rem; outline: none; transition: all 0.2s; }
+        .form-input:focus { border-color: #2d7aff; background: rgba(45,122,255,0.07); box-shadow: 0 0 0 3px rgba(45,122,255,0.12); }
+        .form-input::placeholder { color: #4b556b; }
+        .input-icon-wrap { position: relative; }
+        .input-icon-wrap .form-input { padding-right: 44px; }
+        .input-icon { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); color: #4b556b; font-size: 0.9rem; }
+        .submit-btn { width: 100%; padding: 14px; background: linear-gradient(135deg, #2d7aff, #1a5cd8); border: none; border-radius: 14px; color: white; font-family: 'Tajawal', sans-serif; font-size: 1rem; font-weight: 700; cursor: pointer; transition: all 0.25s; box-shadow: 0 6px 20px rgba(45,122,255,0.4); display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 8px; }
+        .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(45,122,255,0.55); }
+        .submit-btn:active { transform: translateY(0); }
+        .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+        .alert { border-radius: 12px; padding: 12px 16px; font-size: 0.82rem; margin-bottom: 16px; display: none; align-items: center; gap: 10px; }
+        .alert.error { background: rgba(255,61,90,0.1); border: 1px solid rgba(255,61,90,0.3); color: #ff7a94; }
+        .alert.success { background: rgba(0,255,136,0.08); border: 1px solid rgba(0,255,136,0.3); color: #00ff88; }
+        .alert.show { display: flex; animation: alertIn 0.3s ease; }
+        @keyframes alertIn { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
+        .spinner-sm { width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; display: none; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .footer-note { text-align: center; margin-top: 24px; font-size: 0.75rem; color: #4b556b; }
+        .footer-note a { color: #2d7aff; text-decoration: none; font-weight: 600; }
+        .info-box { background: rgba(0,229,255,0.07); border: 1px solid rgba(0,229,255,0.2); border-radius: 14px; padding: 12px 16px; margin-bottom: 18px; font-size: 0.75rem; color: #9ca3cf; text-align: center; }
     </style>
 </head>
 <body>
@@ -269,77 +54,109 @@
         <div class="brand">
             <div class="brand-icon"><i class="fas fa-crown"></i></div>
             <div class="brand-name">NASSIM HOST</div>
-            <div class="brand-sub">لوحة التحكم الآمنة</div>
+            <div class="brand-sub">منصة استضافة بوتات تيليجرام و Node.js</div>
         </div>
 
-        <div class="info-box">
-            <i class="fas fa-shield-alt"></i> قم بتسجيل الدخول للوصول إلى لوحة التحكم
+        <div class="alert" id="alert">
+            <i class="fas fa-exclamation-circle"></i>
+            <span id="alertMsg"></span>
         </div>
 
-        <!-- نموذج تسجيل الدخول الحقيقي (بدون محاكاة) -->
-        <form method="POST" action="/login">
+        <div id="loginForm">
+            <div class="info-box">
+                <i class="fas fa-info-circle"></i> قم بتسجيل الدخول للوصول إلى لوحة التحكم
+            </div>
             <div class="form-group">
                 <label class="form-label"><i class="fas fa-user"></i> اسم المستخدم</label>
                 <div class="input-icon-wrap">
-                    <input type="text" class="form-input" name="username" placeholder="أدخل اسم المستخدم" autocomplete="username" required>
+                    <input type="text" class="form-input" id="loginUsername" placeholder="أدخل اسم المستخدم" autocomplete="username">
                     <i class="fas fa-user input-icon"></i>
                 </div>
             </div>
-
             <div class="form-group">
                 <label class="form-label"><i class="fas fa-lock"></i> كلمة المرور</label>
                 <div class="input-icon-wrap">
-                    <input type="password" class="form-input" name="password" placeholder="أدخل كلمة المرور" autocomplete="current-password" required>
+                    <input type="password" class="form-input" id="loginPassword" placeholder="أدخل كلمة المرور" autocomplete="current-password">
                     <i class="fas fa-lock input-icon"></i>
                 </div>
             </div>
-
-            <!-- كابتشا بسيطة (سيتم التحقق منها في الخادم) -->
-            <div class="captcha-box">
-                <div class="captcha-question">
-                    <i class="fas fa-shield-alt"></i>
-                    <span>7 + 4 = ?</span>
-                </div>
-                <div class="input-icon-wrap">
-                    <input type="text" class="form-input" name="captcha" placeholder="أدخل الناتج" required>
-                    <i class="fas fa-calculator input-icon"></i>
-                </div>
-                <!-- يمكن إضافة حقل مخفي بقيمة الناتج الصحيح ليستخدمه السيرفر -->
-                <input type="hidden" name="captcha_result" value="11">
-            </div>
-
-            <button type="submit" class="submit-btn">
-                <i class="fas fa-sign-in-alt"></i> تسجيل الدخول
+            <button class="submit-btn" id="loginBtn" onclick="doLogin()">
+                <span id="loginText"><i class="fas fa-sign-in-alt"></i> دخول</span>
+                <div class="spinner-sm" id="loginSpinner"></div>
             </button>
-        </form>
+        </div>
 
         <div class="footer-note">
-            <i class="fas fa-headset"></i> للدعم الفني تواصل عبر
-            <br>
-            <a href="https://t.me/NASSIM_D5X" target="_blank" class="tg-link">
-                <i class="fab fa-telegram-plane"></i> @NASSIM_D5X
-            </a>
-            <div style="margin-top: 16px;">🛡️ NASSIM HOST v3.0</div>
+            🛠 تم التطوير بواسطة <a href="https://t.me/NASSIM_D5X" target="_blank">@NASSIM_D5X</a> &nbsp;|&nbsp; NASSIM HOST v3
         </div>
     </div>
 </div>
 
-<!-- فقط جسيمات متحركة (بدون محاكاة لتسجيل الدخول) -->
 <script>
-    (function() {
-        // توليد الجسيمات
-        const container = document.getElementById('particles');
-        for (let i = 0; i < 30; i++) {
-            const p = document.createElement('div');
-            p.className = 'particle';
-            p.style.left = Math.random() * 100 + '%';
-            p.style.animationDuration = (6 + Math.random() * 12) + 's';
-            p.style.animationDelay = (Math.random() * 10) + 's';
-            p.style.width = p.style.height = (1 + Math.random() * 2.5) + 'px';
-            p.style.opacity = 0.3 + Math.random() * 0.7;
-            container.appendChild(p);
+    // الجسيمات
+    const container = document.getElementById('particles');
+    for(let i = 0; i < 28; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        p.style.left = Math.random() * 100 + '%';
+        p.style.animationDuration = (6 + Math.random() * 12) + 's';
+        p.style.animationDelay = (Math.random() * 10) + 's';
+        p.style.width = p.style.height = (1 + Math.random() * 2.5) + 'px';
+        p.style.opacity = 0.3 + Math.random() * 0.7;
+        container.appendChild(p);
+    }
+
+    function showAlert(msg, type='error') {
+        const el = document.getElementById('alert');
+        const icon = el.querySelector('i');
+        el.className = `alert ${type} show`;
+        icon.className = `fas ${type==='success' ? 'fa-check-circle' : 'fa-exclamation-circle'}`;
+        document.getElementById('alertMsg').textContent = msg;
+    }
+    function clearAlert() {
+        document.getElementById('alert').className = 'alert';
+    }
+
+    function setLoading(loading) {
+        document.getElementById('loginBtn').disabled = loading;
+        document.getElementById('loginSpinner').style.display = loading ? 'block' : 'none';
+        document.getElementById('loginText').style.display = loading ? 'none' : 'flex';
+    }
+
+    async function doLogin() {
+        const username = document.getElementById('loginUsername').value.trim();
+        const password = document.getElementById('loginPassword').value.trim();
+        if(!username || !password) { showAlert('الرجاء إدخال اسم المستخدم وكلمة المرور'); return; }
+        clearAlert();
+        setLoading(true);
+        try {
+            const res = await fetch('/api/login', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({username, password})
+            });
+            const data = await res.json();
+            if(data.success) {
+                showAlert('✅ مرحباً! جاري التحويل...', 'success');
+                setTimeout(() => window.location.href = data.redirect || '/', 800);
+            } else {
+                showAlert(data.message || 'بيانات غير صحيحة');
+                setLoading(false);
+            }
+        } catch(e) {
+            showAlert('خطأ في الاتصال بالخادم');
+            setLoading(false);
         }
-    })();
+    }
+
+    document.addEventListener('keydown', e => {
+        if(e.key === 'Enter') doLogin();
+    });
+
+    // التحقق من الجلسة الحالية
+    fetch('/api/current_user').then(r => r.json()).then(d => {
+        if(d.success) window.location.href = d.is_admin ? '/admin' : '/dashboard';
+    }).catch(() => {});
 </script>
 </body>
 </html>
