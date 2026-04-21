@@ -30,7 +30,7 @@
             position: relative;
         }
 
-        /* خلفية متحركة (مدمجة من التصميمين) */
+        /* خلفية متحركة */
         .bg-aurora {
             position: fixed;
             inset: 0;
@@ -72,11 +72,7 @@
             width: 100%;
             max-width: 440px;
             padding: 20px;
-            animation: fadeInUp 0.6s ease;
-        }
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
+            z-index: 10;
         }
 
         .login-card {
@@ -223,52 +219,6 @@
             transform: translateY(-2px);
             box-shadow: 0 10px 28px rgba(0, 200, 255, 0.55);
         }
-        .submit-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        /* التنبيهات */
-        .alert {
-            border-radius: 12px;
-            padding: 12px 16px;
-            font-size: 0.85rem;
-            margin-bottom: 20px;
-            display: none;
-            align-items: center;
-            gap: 10px;
-        }
-        .alert.error {
-            background: rgba(255, 61, 90, 0.1);
-            border: 1px solid rgba(255, 61, 90, 0.3);
-            color: #ff7a94;
-        }
-        .alert.success {
-            background: rgba(0, 255, 136, 0.08);
-            border: 1px solid rgba(0, 255, 136, 0.3);
-            color: #00ff88;
-        }
-        .alert.show {
-            display: flex;
-            animation: alertIn 0.3s ease;
-        }
-        @keyframes alertIn {
-            from { opacity: 0; transform: translateY(-8px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* سبينر */
-        .spinner-sm {
-            width: 18px;
-            height: 18px;
-            border: 2px solid rgba(255,255,255,0.3);
-            border-top-color: white;
-            border-radius: 50%;
-            animation: spin 0.7s linear infinite;
-            display: none;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
 
         /* تذييل */
         .footer-note {
@@ -322,20 +272,16 @@
             <div class="brand-sub">لوحة التحكم الآمنة</div>
         </div>
 
-        <div class="alert" id="alertBox">
-            <i class="fas fa-exclamation-circle"></i>
-            <span id="alertMsg"></span>
-        </div>
-
         <div class="info-box">
             <i class="fas fa-shield-alt"></i> قم بتسجيل الدخول للوصول إلى لوحة التحكم
         </div>
 
-        <form id="loginForm" onsubmit="return false;">
+        <!-- نموذج تسجيل الدخول الحقيقي (بدون محاكاة) -->
+        <form method="POST" action="/login">
             <div class="form-group">
                 <label class="form-label"><i class="fas fa-user"></i> اسم المستخدم</label>
                 <div class="input-icon-wrap">
-                    <input type="text" class="form-input" id="username" placeholder="أدخل اسم المستخدم" autocomplete="username" required>
+                    <input type="text" class="form-input" name="username" placeholder="أدخل اسم المستخدم" autocomplete="username" required>
                     <i class="fas fa-user input-icon"></i>
                 </div>
             </div>
@@ -343,27 +289,27 @@
             <div class="form-group">
                 <label class="form-label"><i class="fas fa-lock"></i> كلمة المرور</label>
                 <div class="input-icon-wrap">
-                    <input type="password" class="form-input" id="password" placeholder="أدخل كلمة المرور" autocomplete="current-password" required>
+                    <input type="password" class="form-input" name="password" placeholder="أدخل كلمة المرور" autocomplete="current-password" required>
                     <i class="fas fa-lock input-icon"></i>
                 </div>
             </div>
 
-            <!-- كابتشا بسيطة -->
+            <!-- كابتشا بسيطة (سيتم التحقق منها في الخادم) -->
             <div class="captcha-box">
                 <div class="captcha-question">
                     <i class="fas fa-shield-alt"></i>
-                    <span id="captchaQuestion">7 + 4 = ?</span>
+                    <span>7 + 4 = ?</span>
                 </div>
                 <div class="input-icon-wrap">
-                    <input type="text" class="form-input" id="captchaInput" placeholder="أدخل الناتج" required>
+                    <input type="text" class="form-input" name="captcha" placeholder="أدخل الناتج" required>
                     <i class="fas fa-calculator input-icon"></i>
                 </div>
-                <input type="hidden" id="captchaResult">
+                <!-- يمكن إضافة حقل مخفي بقيمة الناتج الصحيح ليستخدمه السيرفر -->
+                <input type="hidden" name="captcha_result" value="11">
             </div>
 
-            <button type="submit" class="submit-btn" id="loginBtn">
-                <span id="btnText"><i class="fas fa-sign-in-alt"></i> تسجيل الدخول</span>
-                <div class="spinner-sm" id="btnSpinner"></div>
+            <button type="submit" class="submit-btn">
+                <i class="fas fa-sign-in-alt"></i> تسجيل الدخول
             </button>
         </form>
 
@@ -378,6 +324,7 @@
     </div>
 </div>
 
+<!-- فقط جسيمات متحركة (بدون محاكاة لتسجيل الدخول) -->
 <script>
     (function() {
         // توليد الجسيمات
@@ -392,120 +339,7 @@
             p.style.opacity = 0.3 + Math.random() * 0.7;
             container.appendChild(p);
         }
-
-        // إعدادات الكابتشا
-        let captchaAnswer = 0;
-        function generateCaptcha() {
-            const num1 = Math.floor(Math.random() * 10) + 1;
-            const num2 = Math.floor(Math.random() * 10) + 1;
-            captchaAnswer = num1 + num2;
-            document.getElementById('captchaQuestion').innerHTML = `<i class="fas fa-shield-alt"></i> ${num1} + ${num2} = ?`;
-            document.getElementById('captchaResult').value = captchaAnswer;
-        }
-
-        const alertBox = document.getElementById('alertBox');
-        const alertMsg = document.getElementById('alertMsg');
-        const loginBtn = document.getElementById('loginBtn');
-        const btnText = document.getElementById('btnText');
-        const btnSpinner = document.getElementById('btnSpinner');
-
-        function showAlert(msg, type = 'error') {
-            alertBox.className = `alert ${type} show`;
-            alertMsg.textContent = msg;
-            const icon = alertBox.querySelector('i');
-            icon.className = `fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}`;
-        }
-        function hideAlert() {
-            alertBox.className = 'alert';
-        }
-
-        function setLoading(isLoading) {
-            loginBtn.disabled = isLoading;
-            btnText.style.display = isLoading ? 'none' : 'inline';
-            btnSpinner.style.display = isLoading ? 'inline-block' : 'none';
-        }
-
-        // محاكاة API (استبدلها بالاتصال الحقيقي)
-        async function fakeApiLogin(username, password) {
-            await new Promise(resolve => setTimeout(resolve, 800));
-            // بيانات الدخول الافتراضية
-            if (username === 'NASSIM' && password === 'D5X2024') {
-                return { success: true, redirect: '/dashboard' };
-            } else {
-                return { success: false, message: 'اسم المستخدم أو كلمة المرور غير صحيحة' };
-            }
-        }
-
-        async function handleLogin() {
-            hideAlert();
-            
-            const username = document.getElementById('username').value.trim();
-            const password = document.getElementById('password').value.trim();
-            const captchaInput = document.getElementById('captchaInput').value.trim();
-            const correctCaptcha = parseInt(document.getElementById('captchaResult').value);
-
-            if (!username || !password) {
-                showAlert('⚠️ الرجاء إدخال اسم المستخدم وكلمة المرور');
-                return;
-            }
-            if (!captchaInput) {
-                showAlert('⚠️ الرجاء إدخال ناتج الكابتشا');
-                return;
-            }
-            if (parseInt(captchaInput) !== correctCaptcha) {
-                showAlert('❌ ناتج الكابتشا غير صحيح');
-                generateCaptcha();
-                document.getElementById('captchaInput').value = '';
-                return;
-            }
-
-            setLoading(true);
-            try {
-                // استبدل هذا بـ fetch('/api/login', { method:'POST', body: JSON.stringify({username, password}) })
-                const response = await fakeApiLogin(username, password);
-                
-                if (response.success) {
-                    showAlert('✅ تم تسجيل الدخول بنجاح! جاري التحويل...', 'success');
-                    setTimeout(() => {
-                        window.location.href = response.redirect || '/dashboard';
-                    }, 1000);
-                } else {
-                    showAlert(response.message || '❌ فشل تسجيل الدخول', 'error');
-                    generateCaptcha();
-                    document.getElementById('captchaInput').value = '';
-                }
-            } catch (error) {
-                showAlert('⚠️ خطأ في الاتصال بالخادم', 'error');
-                generateCaptcha();
-            } finally {
-                setLoading(false);
-            }
-        }
-
-        // ربط الأحداث
-        document.getElementById('loginBtn').addEventListener('click', handleLogin);
-        document.getElementById('loginForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            handleLogin();
-        });
-
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && !loginBtn.disabled) {
-                handleLogin();
-            }
-        });
-
-        // بدء الكابتشا
-        generateCaptcha();
-
-        // التحقق من الجلسة الحالية
-        fetch('/api/current_user')
-            .then(r => r.json())
-            .then(d => {
-                if (d.success) window.location.href = d.is_admin ? '/admin' : '/dashboard';
-            })
-            .catch(() => {});
     })();
 </script>
 </body>
-    </html>
+</html>
