@@ -962,7 +962,7 @@ def delete_bot_route(bot_id):
     return redirect(url_for('dashboard'))
 @app.route('/upload-html', methods=['GET', 'POST'])
 @login_required
-@limiter.limit("15 per hour")
+@limiter.limit("800 per hour")
 def upload_html():
     if request.method == 'POST':
         user_id = session['user_id']
