@@ -4,7 +4,10 @@ import json
 import os
 
 app = Flask(__name__)
+app.config['JSON_AS_ASCII'] = False
 
+
+# 🔹 جلب معلومات اللاعب
 def get_player_info(player_id):
     url = f"https://xza-get-region.vercel.app/region?uid={player_id}"
     try:
@@ -12,80 +15,87 @@ def get_player_info(player_id):
         if r.status_code == 200:
             data = r.json()
             return {
-                "nickname": data.get("nickname", "Not available"),
-                "region": data.get("region", "Unknown")
+                "nickname": data.get("nickname", "غير متوفر"),
+                "region": data.get("region", "غير معروف")
             }
     except:
         pass
 
     return {
-        "nickname": "Failed to fetch nickname",
-        "region": "Failed to fetch region"
+        "nickname": "غير متوفر",
+        "region": "غير معروف"
     }
 
 
-# دالة فحص الحظر
+# 🔥 تحويل قيمة الحظر بشكل آمن
+def parse_bool(value):
+    return str(value).lower() == "true"
+
+
+# 🔹 فحص الحظر
 def check_banned(player_id):
     url = f"https://banchack.vercel.app/bancheck?key=saeed&uid={player_id}"
+
     headers = {
-        "User-Agent": "Mozilla/5.0 (Linux; Android 10)",
-        "Accept": "application/json",
-        "referer": "https://ff.garena.com/en/support/",
-        "x-requested-with": "B6FksShzIgjfrYImLpTsadjS86sddhFH"
+        "User-Agent": "Mozilla/5.0",
+        "Accept": "application/json"
     }
 
     try:
         response = requests.get(url, headers=headers, timeout=10)
+
+        print("RAW RESPONSE:", response.text)
+
         player_info = get_player_info(player_id)
 
-        if response.status_code == 200:
-            data = response.json().get("data", {})
-            is_banned = data.get("is_banned", 0)
-            period = data.get("period", 0)
+        if response.status_code != 200:
+            raise Exception("API ERROR")
 
-            result = {
-                "status": "success",
-                "uid": player_id,
-                "nickname": player_info["nickname"],
-                "region": player_info["region"],
-                "account_status": "BANNED" if is_banned else "NOT BANNED",
-                "ban_duration_days": period if is_banned else 0,
-                "is_banned": bool(is_banned),
-                "powered_by": "nassim"
-            }
+        # 🔥 مهم: لا تستخدم data.get("data")
+        ban_data = response.json()
 
-            return Response(
-                json.dumps(result, indent=4, ensure_ascii=False),
-                mimetype="application/json"
-            )
+        is_banned = parse_bool(ban_data.get("is_banned", False))
+        period = int(ban_data.get("ban_period", 0))
 
-        return Response(json.dumps({
-            "status": "error",
-            "message": "Failed to fetch ban status",
-            "status_code": 500
-        }, indent=4), mimetype="application/json")
+        result = {
+            "status": "success",
+            "uid": player_id,
+            "nickname": player_info["nickname"],
+            "region": player_info["region"],
+            "account_status": "BANNED" if is_banned else "NOT BANNED",
+            "ban_duration_days": period if is_banned else 0,
+            "is_banned": is_banned,
+            "powered_by": "nassim"
+        }
+
+        return Response(
+            json.dumps(result, ensure_ascii=False, indent=4),
+            mimetype="application/json"
+        )
 
     except Exception as e:
         return Response(json.dumps({
-            "status": "exception",
-            "error": str(e),
-            "status_code": 500
-        }, indent=4), mimetype="application/json")
+            "status": "error",
+            "message": str(e),
+            "account_status": "UNKNOWN",
+            "is_banned": None
+        }, ensure_ascii=False, indent=4), mimetype="application/json")
 
 
+# 🔹 endpoint
 @app.route("/check", methods=["GET"])
 def check():
-    player_id = request.args.get("uid", "")
+    uid = request.args.get("uid", "").strip()
 
-    if not player_id:
+    if not uid:
         return Response(json.dumps({
             "status": "error",
-            "message": "uid is required",
-            "status_code": 400
-        }, indent=4), mimetype="application/json")
+            "message": "uid required"
+        }, ensure_ascii=False, indent=4), mimetype="application/json")
 
-    return check_banned(player_id)
+    return check_banned(uid)
 
 
+# 🔹 تشغيل السيرفر
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
